@@ -25,17 +25,17 @@ jobs:
     - name: build
       run: dotnet build --configuration Release --no-restore
 
-    - name: test
-      run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
-
-    - name: retrieve list of coverage info reports
-      run: echo ::set-env name=COVERAGE_REPORTS::$(find ./[Tt]est*/ -name "coverage.info" | paste -sd ";")
-
-    - name: merge code coverage data
-      uses: danielpalme/ReportGenerator-GitHub-Action@4.6.6
-      with:
-        reports: '${{ env.COVERAGE_REPORTS }}'
-        reporttypes: 'lcov;HtmlInline'
+    # - name: test
+    #   run: dotnet test --no-restore --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
+    # 
+    # - name: retrieve list of coverage info reports
+    #   run: echo ::set-env name=COVERAGE_REPORTS::$(find ./[Tt]est*/ -name "coverage.info" | paste -sd ";")
+    # 
+    # - name: merge code coverage data
+    #   uses: danielpalme/ReportGenerator-GitHub-Action@4.6.6
+    #   with:
+    #     reports: '${{ env.COVERAGE_REPORTS }}'
+    #     reporttypes: 'lcov;HtmlInline'
     # known issue in https://github.com/romeovs/lcov-reporter-action/issues/1
     # - if: github.event_name == 'pull_request'
     #   name: publish code coverage results
