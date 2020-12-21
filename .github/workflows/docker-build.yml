@@ -1,10 +1,8 @@
-name: docker build latest
+name: docker build & registry push (latest)
 
 on:
   push:
     branches: [ develop ]
-  #create:
-  #  tags: '*'
 
 jobs:
   release:
@@ -23,17 +21,9 @@ jobs:
        with:
          version: latest
      - name: Build image with all platforms (with push)
-       run: docker buildx build \
-             --platform=linux/amd64 \
-             --output "type=image,push=true" \
-             --file ./Dockerfile . \
-             --tag $(echo "${DOCKER_USERNAME}" | tr '[:upper:]' '[:lower:]')/nginx-custom-backend:build
+       run: docker buildx build --platform=linux/amd64 -t fabiolune/nginx-custom-backend:build -f Dockerfile --push .
      - name: Build dockerfile (with push)
-       run: docker buildx build \
-             --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 \
-             --output "type=image,push=true" \
-             --file ./publish.Dockerfile . \
-             --tag $(echo "${DOCKER_USERNAME}" | tr '[:upper:]' '[:lower:]')/nginx-custom-backend:latest
+       run: docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:latest -f publish.Dockerfile --push .
      - name: delete build base image from docker hub
        run: curl -u "${DOCKER_USERNAME}:${DOCKER_PASSWORD}" -X "DELETE" "https://cloud.docker.com/v2/repositories/${DOCKER_USERNAME}/nginx-custom-backend/tags/build/"
 
