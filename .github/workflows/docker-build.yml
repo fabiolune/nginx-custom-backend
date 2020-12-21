@@ -3,8 +3,8 @@ name: docker build
 on:
   push:
     branches: [ develop ]
-  create:
-    tags: '*'
+  #create:
+  #  tags: '*'
 
 jobs:
   release:
@@ -16,7 +16,7 @@ jobs:
        env:
          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-         run: echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin
+       run: echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin
      - name: Set up Docker Buildx
        id: buildx
        uses: crazy-max/ghaction-docker-buildx@v1
