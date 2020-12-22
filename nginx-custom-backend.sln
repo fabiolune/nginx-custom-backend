@@ -22,6 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\dotnet-core.yml = .github\workflows\dotnet-core.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D1956B72-A5AC-4D3E-B5B1-D3EAAFBD6F67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fabiolune.CustomBackend.Integration.Tests", "Fabiolune.CustomBackend.Integration.Tests\Fabiolune.CustomBackend.Integration.Tests.csproj", "{B3D0908C-05FC-47E1-8EB9-15D835E403CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,18 @@ Global
 		{EDB372A1-F644-43B2-B4CD-84D5C6B692CA}.Release|x64.Build.0 = Release|Any CPU
 		{EDB372A1-F644-43B2-B4CD-84D5C6B692CA}.Release|x86.ActiveCfg = Release|Any CPU
 		{EDB372A1-F644-43B2-B4CD-84D5C6B692CA}.Release|x86.Build.0 = Release|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Debug|x64.Build.0 = Debug|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Debug|x86.Build.0 = Debug|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Release|x64.ActiveCfg = Release|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Release|x64.Build.0 = Release|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +67,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{801F3659-AC83-4855-8781-BFE61A645A04} = {13DAC0B4-BE84-460C-AA04-CBF623F56C28}
 		{03D088BE-BDDE-4EB9-A1F9-D37AB7574404} = {801F3659-AC83-4855-8781-BFE61A645A04}
+		{B3D0908C-05FC-47E1-8EB9-15D835E403CF} = {D1956B72-A5AC-4D3E-B5B1-D3EAAFBD6F67}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F33DBC7F-D429-4B37-AB6D-BFEA6610FE30}
