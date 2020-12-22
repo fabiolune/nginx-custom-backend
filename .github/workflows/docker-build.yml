@@ -25,5 +25,6 @@ jobs:
      - name: Build dockerfile (with push)
        run: docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:latest -f publish.Dockerfile --push .
      - name: delete build base image from docker hub
-       run: curl -u "${DOCKER_USERNAME}:${DOCKER_PASSWORD}" -X "DELETE" "https://cloud.docker.com/v2/repositories/${DOCKER_USERNAME}/nginx-custom-backend/tags/build/"
-
+       run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | jq -r .token) && \
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/fabiolune/nginx-custom-backend/tags/build/
