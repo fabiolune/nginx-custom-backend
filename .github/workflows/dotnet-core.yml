@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOTNET_NOLOGO: true
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
     - name: Checkout
       uses: actions/checkout@v1
