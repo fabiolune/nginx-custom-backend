@@ -17,17 +17,20 @@ jobs:
        run: |
          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
-         echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+         echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/v}
+         echo ::set-output name=GIT_VERSION::${docker run --rm -v "$(pwd):/repo" gittools/gitversion:5.3.5-linux-alpine.3.10-x64-netcoreapp3.1 /repo | jq '.SemVer'}
      - name: Build base image
        run: |
          echo $SOURCE_NAME
          echo $SOURCE_BRANCH
          echo $SOURCE_TAG
+         echo $GIT_VERSION
        env:
          SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
          SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
          SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
-
+         GIT_VERSION: ${{ steps.branch_name.outputs.GIT_VERSION }}
+    
 #     - id: get_version
 #       uses: battila7/get-version-action@v2
 #     - name: Version Reader
