@@ -1,10 +1,10 @@
-name: docker build latest
+name: docker build & registry push (latest)
 
 on:
+  create:
+    tags: 'v*'
   push:
     branches: [ develop ]
-  #create:
-  #  tags: '*'
 
 jobs:
   release:
@@ -12,6 +12,15 @@ jobs:
      steps:
      - name: Checkout
        uses: actions/checkout@v1
+     - id: version-extractor
+       name: Extract version
+       run: |
+         if [[ ${GITHUB_REF} == *"refs/tags"* ]]; 
+         then
+           echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+         else 
+           echo ::set-output name=VERSION::latest
+         fi
      - name: Dockerhub login
        env:
          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -23,17 +32,12 @@ jobs:
        with:
          version: latest
      - name: Build image with all platforms (with push)
-       run: docker buildx build \
-             --platform=linux/amd64 \
-             --output "type=image,push=true" \
-             --file ./Dockerfile . \
-             --tag $(echo "${DOCKER_USERNAME}" | tr '[:upper:]' '[:lower:]')/nginx-custom-backend:build
+       run: docker buildx build --platform=linux/amd64 -t fabiolune/nginx-custom-backend:build -f Dockerfile --push .
      - name: Build dockerfile (with push)
-       run: docker buildx build \
-             --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 \
-             --output "type=image,push=true" \
-             --file ./publish.Dockerfile . \
-             --tag $(echo "${DOCKER_USERNAME}" | tr '[:upper:]' '[:lower:]')/nginx-custom-backend:latest
+       env: 
+         VERSION: ${{ steps.version-extractor.outputs.VERSION }}
+       run: docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:${VERSION} -f publish.Dockerfile --push .
      - name: delete build base image from docker hub
-       run: curl -u "${DOCKER_USERNAME}:${DOCKER_PASSWORD}" -X "DELETE" "https://cloud.docker.com/v2/repositories/${DOCKER_USERNAME}/nginx-custom-backend/tags/build/"
-
+       run: |
+          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | grep -o '"token":[^"]*"[^"]*"' | sed -E 's/".*".*"(.*)"/\1/') && \
+          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/fabiolune/nginx-custom-backend/tags/build/
