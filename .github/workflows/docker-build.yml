@@ -1,6 +1,8 @@
 name: docker build & registry push (latest)
 
 on:
+  create:
+    tags: 'v*'
   push:
     branches: [ develop ]
 
@@ -10,6 +12,15 @@ jobs:
      steps:
      - name: Checkout
        uses: actions/checkout@v1
+     - id: version-extractor
+       name: Extract version
+       run: |
+         if [[ ${GITHUB_REF} == *"refs/tags"* ]]; 
+         then
+           echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+         else 
+           echo ::set-output name=VERSION::latest
+         fi
      - name: Dockerhub login
        env:
          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -23,7 +34,9 @@ jobs:
      - name: Build image with all platforms (with push)
        run: docker buildx build --platform=linux/amd64 -t fabiolune/nginx-custom-backend:build -f Dockerfile --push .
      - name: Build dockerfile (with push)
-       run: docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:latest -f publish.Dockerfile --push .
+       env: 
+         VERSION: ${{ steps.version-extractor.outputs.VERSION }}
+       run: docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:${VERSION} -f publish.Dockerfile --push .
      - name: delete build base image from docker hub
        run: |
           HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | grep -o '"token":[^"]*"[^"]*"' | sed -E 's/".*".*"(.*)"/\1/') && \

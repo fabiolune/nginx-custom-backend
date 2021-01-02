@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D1956B72-A5AC-4D3E-B5B1-D3EAAFBD6F67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fabiolune.CustomBackend.Integration.Tests", "Fabiolune.CustomBackend.Integration.Tests\Fabiolune.CustomBackend.Integration.Tests.csproj", "{B3D0908C-05FC-47E1-8EB9-15D835E403CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fabiolune.CustomBackend.Integration.Tests", "Fabiolune.CustomBackend.Integration.Tests\Fabiolune.CustomBackend.Integration.Tests.csproj", "{B3D0908C-05FC-47E1-8EB9-15D835E403CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
