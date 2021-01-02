@@ -1,8 +1,10 @@
-name: docker build & registry push (latest)
+name: Release build from tag
 
 on:
   create:
-    tags: '*'
+    tags: 'v*'
+  push:
+    branches: [  feature/run_action_on_tag ]
 
 jobs:
   semanticbuild:
