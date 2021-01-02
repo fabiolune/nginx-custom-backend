@@ -1,0 +1,34 @@
+name: docker build & registry push (latest)
+
+on:
+  create:
+    tags: '*'
+
+jobs:
+  semanticbuild:
+     runs-on: ubuntu-latest
+     steps:
+     - name: Checkout
+       uses: actions/checkout@v1
+     - id: get_version
+       uses: battila7/get-version-action@v2
+     - name: Version Reader
+       run: echo ${{ steps.get_version.outputs.version }} - ${{ steps.get_version.outputs.version-without-v }}
+#     - name: Dockerhub login
+#       env:
+#         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#       run: echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin
+#     - name: Set up Docker Buildx
+#       id: buildx
+#       uses: crazy-max/ghaction-docker-buildx@v1
+#       with:
+#         version: latest
+#     - name: Build image with all platforms (with push)
+#       run: docker buildx build --platform=linux/amd64 -t fabiolune/nginx-custom-backend:build -f Dockerfile --push .
+#     - name: Build dockerfile (with push)
+#       run: docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:latest -f publish.Dockerfile --push .
+#     - name: delete build base image from docker hub
+#       run: |
+#          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | grep -o '"token":[^"]*"[^"]*"' | sed -E 's/".*".*"(.*)"/\1/') && \
+#          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/fabiolune/nginx-custom-backend/tags/build/
