@@ -22,7 +22,7 @@ jobs:
        id: buildx
        uses: crazy-max/ghaction-docker-buildx@v1
        with:
-         version: latest
+         buildx-version: latest
      
      - name: Build and push image with all platforms binaries
        run: docker buildx build -t fabiolune/nginx-custom-backend:build -f Dockerfile --push .
