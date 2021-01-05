@@ -5,7 +5,7 @@ ARG TARGETPLATFORM
 ENV rid=
 RUN if [ "$TARGETPLATFORM" = 'linux/amd64' ]; \
 	then \
-		mv /artifacts/linux-x64 build ; \
+		ln -s /artifacts/linux-x64 build ; \
 	elif [ "$TARGETPLATFORM" = 'linux/arm/v7' ]; \
 	then \
 		ln -s /artifacts/linux-arm build ; \
@@ -13,7 +13,7 @@ RUN if [ "$TARGETPLATFORM" = 'linux/amd64' ]; \
 	then \
 		ln -s /artifacts/linux-arm64 build ; \
 	else \
-		echo "platform not supported"; \
+		echo "platform $TARGETPLATFORM not supported"; \
 		exit 1; \
 	fi
 
