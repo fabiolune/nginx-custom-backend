@@ -44,5 +44,5 @@ jobs:
        env:
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-       run: docker run --rm dockerhub-image-remover:0.1.0 ${DOCKER_USERNAME} ${DOCKER_PASSWORD} fabiolune/nginx-custom-backend build
+       run: docker run --rm fabiolune/dockerhub-image-remover:0.1.0 ${DOCKER_USERNAME} ${DOCKER_PASSWORD} fabiolune/nginx-custom-backend build
           
