@@ -10,34 +10,39 @@ jobs:
   release:
      runs-on: ubuntu-latest
      steps:
+
      - name: Checkout
        uses: actions/checkout@v1
-     - id: version-extractor
-       name: Extract version
-       run: |
-         if [[ ${GITHUB_REF} == *"refs/tags"* ]]; 
-         then
-           echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
-         else 
-           echo ::set-output name=VERSION::latest
-         fi
+     
      - name: Dockerhub login
        env:
          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
        run: echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin
+     
      - name: Set up Docker Buildx
        id: buildx
        uses: crazy-max/ghaction-docker-buildx@v1
        with:
          version: latest
-     - name: Build image with all platforms (with push)
-       run: docker buildx build --platform=linux/amd64 -t fabiolune/nginx-custom-backend:build -f Dockerfile --push .
-     - name: Build dockerfile (with push)
-       env: 
-         VERSION: ${{ steps.version-extractor.outputs.VERSION }}
-       run: docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:${VERSION} -f publish.Dockerfile --push .
-     - name: delete build base image from docker hub
+     
+     - name: Build and push image with all platforms binaries
+       run: docker buildx build -t fabiolune/nginx-custom-backend:build -f Dockerfile --push .
+     
+     - name: Build and push multi arch runnable image
        run: |
-          HUB_TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "'${DOCKER_USERNAME}'", "password": "'${DOCKER_PASSWORD}'"}' https://hub.docker.com/v2/users/login/ | grep -o '"token":[^"]*"[^"]*"' | sed -E 's/".*".*"(.*)"/\1/') && \
-          curl -i -X DELETE -H "Accept: application/json" -H "Authorization: JWT $HUB_TOKEN" https://hub.docker.com/v2/repositories/fabiolune/nginx-custom-backend/tags/build/
+         if [[ ${GITHUB_REF} == *"refs/tags"* ]]; 
+         then
+           VERSION=${GITHUB_REF#refs/tags}
+           VERSION=${VERSION#v}
+           docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:latest -t fabiolune/nginx-custom-backend:${VERSION} -f publish.Dockerfile --push .
+         else 
+           docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:latest -f publish.Dockerfile --push .
+         fi
+
+     - name: delete build base image from docker hub
+       env:
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+       run: docker run --rm dockerhub-image-remover:0.1.0 ${DOCKER_USERNAME} ${DOCKER_PASSWORD} fabiolune/nginx-custom-backend build
+          
