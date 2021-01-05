@@ -3,8 +3,6 @@ name: docker build & registry push (latest)
 on:
   create:
     tags: 'v*'
-  push:
-    branches: [ develop ]
 
 jobs:
   release:
@@ -24,7 +22,7 @@ jobs:
        id: buildx
        uses: crazy-max/ghaction-docker-buildx@v1
        with:
-         version: latest
+         buildx-version: latest
      
      - name: Build and push image with all platforms binaries
        run: docker buildx build -t fabiolune/nginx-custom-backend:build -f Dockerfile --push .
@@ -34,6 +32,7 @@ jobs:
          if [[ ${GITHUB_REF} == *"refs/tags"* ]]; 
          then
            VERSION=${GITHUB_REF#/refs/tags}
+           VERSION=${VERSION#refs/tags}
            VERSION=${VERSION#v}
            docker buildx build --platform=linux/arm/v7,linux/arm64/v8,linux/amd64 -t fabiolune/nginx-custom-backend:latest -t fabiolune/nginx-custom-backend:${VERSION} -f publish.Dockerfile --push .
          else 
